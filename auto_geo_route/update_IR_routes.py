@@ -8,6 +8,7 @@ import sys
 
 home = str(Path.home())
 interface = sys.argv[1]
+router_ip = sys.argv[2]
 ir_resources = requests.get("https://stat.ripe.net/data/country-resource-list/data.json?resource=ir", verify=True)
 
 old_ip_list = []
@@ -43,7 +44,7 @@ for v4 in new_ip_list:
     try:
         with open(f"{home}/IR_IPs.txt", "a") as f:
             f.write(f"{v4}\n")
-        subprocess.run(["ip", "r", "add", v4, "dev", interface], shell=False, check=True)
+        subprocess.run(["ip", "r", "add", v4, "dev", interface, "via", router_ip], shell=False, check=True)
         new_added += 1
     except:
         print(f"E: add_new: failed to add {v4}")
